@@ -27,6 +27,7 @@ public class HBase {
 
     public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
         if (admin.tableExists(table.getTableName())) {
+            //表已经存在先删除再创建
             admin.disableTable(table.getTableName());
             admin.deleteTable(table.getTableName());
         }
@@ -36,7 +37,9 @@ public class HBase {
     public static void createSchemaTables(Configuration config) throws IOException {
         try (Connection connection = ConnectionFactory.createConnection(config);
              Admin admin = connection.getAdmin()) {
+            //定义表名
             HTableDescriptor table = new HTableDescriptor(TableName.valueOf(TABLE_NAME));
+            //增加列族
             table.addFamily(new HColumnDescriptor(CF_ORDER_DETAIL).setCompressionType(Algorithm.NONE));
             table.addFamily(new HColumnDescriptor(CF_TRANSACTION).setCompressionType(Algorithm.NONE));
             createOrOverwrite(admin, table);
@@ -144,6 +147,7 @@ public class HBase {
             put8.addColumn("Transaction".getBytes(), "CompleteTime".getBytes(), "2020-6-27 10:04:31".getBytes());
             PutList.add(put8);
 
+            //遍历PutList插入数据
             for (Put put : PutList) {
                 table.put(put);
             }
@@ -155,10 +159,6 @@ public class HBase {
         Configuration config = HBaseConfiguration.create();
 
         //Add any necessary configuration files (hbase-site.xml, core-site.xml)
-//        export HADOOP_CONF_DIR=~/hadoop-2.10.1/etc/hadoop
-//
-//        export HBASE_CONF_DIR=~/hbase-2.3.7/conf
-
         config.addResource(new Path(System.getenv("HBASE_CONF_DIR"), "hbase-site.xml"));
         config.addResource(new Path(System.getenv("HADOOP_CONF_DIR"), "core-site.xml"));
         createSchemaTables(config);
