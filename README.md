@@ -635,6 +635,6 @@ reduce
 
 使用python对结果进行可视化，即通过原始的数据点坐标和mapreduce产生的中心点计算每个数据点最近的中心点，作为该数据点的聚类结果，聚类结果如下图所示：
 
-![聚类结果](https://github.com/Zhanghyi/hadoop_experiments/blob/main/k-means/kemans.png "聚类结果")
+![聚类结果](https://raw.githubusercontent.com/Zhanghyi/hadoop_experiments/main/k-means/kmeans.png "聚类结果")
 
 
